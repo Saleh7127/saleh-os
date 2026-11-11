@@ -100,9 +100,10 @@
   <div id="travel"><div class="panel"><p class="tag">DEPARTURES</p><h2>Where to?</h2><div class="opts"></div><button class="cancel pill">Stay here</button></div></div>
   <div id="travelfx"><canvas id="fly-globe" aria-hidden="true"></canvas><div class="tfx-text"><small>NOW FLYING</small><p><b class="from"></b><i>✈</i><b class="to"></b></p></div></div>
 
-  <div id="help"><div class="panel">
-    <h2>Controls</h2>
-    <ul>
+  <div id="help"><div class="panel" role="dialog" aria-labelledby="help-title">
+    <button class="help-close pill" type="button" aria-label="Close controls"><span class="long">Close </span>✕</button>
+    <h2 id="help-title">Controls</h2>
+    <ul class="desk-only">
       <li><kbd>W A S D</kbd> / joystick — move (camera-relative)</li>
       <li><kbd>Mouse</kbd> / drag right side — look around · <kbd>Wheel</kbd> zoom</li>
       <li><kbd>Shift</kbd> sprint · <kbd>C</kbd> walk · <kbd>Space</kbd> jump</li>
@@ -112,15 +113,21 @@
       <li><kbd>M</kbd> map — click any place to fast-travel there · <kbd>Esc</kbd> release mouse / close</li>
       <li><b>✈ Abroad</b> button (or any airport) — fly to Finland and Italy</li>
     </ul>
+    <ul class="touch-only">
+      <li><b>Left thumb</b> — drag anywhere on the left half to move</li>
+      <li><b>Right side</b> — drag to look around</li>
+      <li><b>Jump</b> · <b>Sprint</b> · <b>Bonk</b> — the round buttons bottom-right (Jump is the handbrake in vehicles)</li>
+      <li><b>Tap the prompt</b> that pops up to ride a vehicle, get off, open a memory or board a flight</li>
+      <li><b>Map</b> — tap any place to fast-travel · <b>✈</b> to fly to Finland and Italy</li>
+    </ul>
     <p>Each district is a chapter of my life — walk into it and you'll grow to that age.</p>
   </div></div>
 
   <div id="touch" class="game" aria-hidden="true">
     <div id="joy"><i></i></div>
-    <button class="tbtn" data-btn="act">E</button>
-    <button class="tbtn" data-btn="punch">✊</button>
-    <button class="tbtn" data-btn="jump">⤒</button>
-    <button class="tbtn" data-btn="run">»</button>
+    <button class="tbtn" data-btn="jump"><svg viewBox="0 0 24 24"><path d="M12 3l7.5 7.5h-4.5V20h-6v-9.5H4.5z" fill="currentColor"/></svg><small>JUMP</small></button>
+    <button class="tbtn" data-btn="run"><svg viewBox="0 0 24 24"><path d="M13.5 2L4 14h7l-1.5 8L20 10h-7z" fill="currentColor"/></svg><small>SPRINT</small></button>
+    <button class="tbtn" data-btn="punch"><svg viewBox="0 0 24 24"><path d="M12 2l2.3 6.1L21 8.6l-5.1 4.2 1.7 6.7L12 15.9l-5.6 3.6 1.7-6.7L3 8.6l6.7-.5z" fill="currentColor"/></svg><small>BONK</small></button>
   </div>
 
   <dialog id="cv" open aria-labelledby="cv-title">

@@ -36,7 +36,7 @@ export function createInput(canvas) {
     st.touch = true;
     document.documentElement.classList.add("touch");
     for (const t of e.changedTouches) {
-      if (t.target.closest?.(".tbtn, button, a, dialog, .card")) continue;
+      if (t.target.closest?.(".tbtn, button, a, dialog, .card, #prompt")) continue;
       if (t.clientX < innerWidth * 0.45 && joyId === null) {
         joyId = t.identifier; joyC = { x: t.clientX, y: t.clientY };
         joy.style.left = t.clientX - 60 + "px"; joy.style.top = t.clientY - 60 + "px"; joy.classList.add("on");
@@ -69,6 +69,12 @@ export function createInput(canvas) {
     const k = b.dataset.btn;
     b.addEventListener("pointerdown", (e) => { e.preventDefault(); hold[k] = true; pressed.add("btn-" + k); });
     for (const ev of ["pointerup", "pointerleave", "pointercancel"]) b.addEventListener(ev, () => (hold[k] = false));
+  });
+  // touch: tapping the on-screen prompt performs the action (ride, open, board)
+  document.getElementById("prompt")?.addEventListener("pointerdown", (e) => {
+    if (!st.touch) return;
+    e.preventDefault();
+    pressed.add("btn-act");
   });
 
   st.poll = () => {

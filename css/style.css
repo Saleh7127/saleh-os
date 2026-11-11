@@ -263,6 +263,11 @@ html.playing #prompt:not(.on), html.playing #speedo:not(.on), html.playing #hint
 #card .skills { display: flex; flex-wrap: wrap; gap: 6px; margin-top: 12px; }
 #card .skills span { font: 500 11.5px var(--mono); padding: 3px 8px; border-radius: 999px; background: rgba(95, 224, 255, 0.1); border: 1px solid rgba(95, 224, 255, 0.3); color: #cfefff; }
 #travel .panel, #help .panel { padding: 26px 30px; width: min(460px, 92vw); }
+#help .panel { position: relative; max-height: 88vh; overflow-y: auto; scrollbar-width: none; }
+.help-close { position: absolute; top: 18px; right: 18px; padding: 6px 12px; font-size: 12px; color: inherit; }
+.touch-only { display: none; }
+html.touch .touch-only { display: block; }
+html.touch .desk-only { display: none; }
 #travel h2, #help h2 { font: 700 30px var(--display); margin: 10px 0 16px; }
 #travel .opts { display: grid; gap: 10px; margin-bottom: 16px; }
 #travel .opts .btn { justify-content: center; padding: 14px; font-size: 15px; }
@@ -282,11 +287,20 @@ html.touch.playing #touch { display: block; }
 #joy { position: fixed; left: 40px; bottom: 60px; width: 120px; height: 120px; border-radius: 50%; border: 2px solid rgba(255, 255, 255, 0.3); background: rgba(8, 12, 22, 0.25); z-index: 7; pointer-events: none; opacity: 0.6; }
 #joy.on { opacity: 1; }
 #joy i { position: absolute; left: 35px; top: 35px; width: 50px; height: 50px; border-radius: 50%; background: rgba(255, 255, 255, 0.85); }
-.tbtn { position: fixed; z-index: 7; width: 62px; height: 62px; border-radius: 50%; border: 1px solid var(--line); background: rgba(8, 12, 22, 0.55); backdrop-filter: blur(8px); font: 700 20px var(--display); touch-action: none; }
-.tbtn[data-btn="act"] { right: 24px; bottom: 120px; background: var(--ink); color: #0a0f1c; }
-.tbtn[data-btn="jump"] { right: 100px; bottom: 50px; }
-.tbtn[data-btn="run"] { right: 24px; bottom: 40px; }
-.tbtn[data-btn="punch"] { right: 100px; bottom: 130px; }
+.tbtn { position: fixed; z-index: 7; width: 58px; height: 58px; display: grid; place-items: center; padding: 0; border-radius: 50%; border: 1px solid rgba(255, 255, 255, 0.2); background: rgba(8, 12, 22, 0.45); backdrop-filter: blur(10px); -webkit-backdrop-filter: blur(10px); color: #fff; box-shadow: 0 6px 22px rgba(0, 0, 0, 0.35); touch-action: none; user-select: none; -webkit-user-select: none; transition: transform 0.12s, background 0.12s; }
+.tbtn svg { width: 24px; height: 24px; }
+.tbtn small { position: absolute; top: 100%; margin-top: 4px; font: 600 8.5px var(--mono); letter-spacing: 0.14em; color: rgba(255, 255, 255, 0.8); text-shadow: 0 1px 6px rgba(0, 0, 0, 0.8); }
+.tbtn:active { transform: scale(0.9); background: rgba(255, 255, 255, 0.25); }
+/* thumb arc: Jump in the corner, Sprint to its left, Bonk above */
+.tbtn[data-btn="jump"] { right: calc(22px + env(safe-area-inset-right)); bottom: calc(40px + env(safe-area-inset-bottom)); width: 76px; height: 76px; background: rgba(255, 255, 255, 0.16); }
+.tbtn[data-btn="jump"] svg { width: 30px; height: 30px; }
+.tbtn[data-btn="run"] { right: calc(116px + env(safe-area-inset-right)); bottom: calc(40px + env(safe-area-inset-bottom)); }
+.tbtn[data-btn="punch"] { right: calc(31px + env(safe-area-inset-right)); bottom: calc(146px + env(safe-area-inset-bottom)); }
+/* on touch the prompt itself is the action button */
+html.touch #prompt { cursor: pointer; padding-right: 18px; box-shadow: 0 0 0 1px rgba(255, 255, 255, 0.25), 0 8px 28px rgba(0, 0, 0, 0.4); }
+html.touch #prompt kbd { font-size: 0; }
+html.touch #prompt kbd::after { content: "TAP"; font-size: 10px; letter-spacing: 0.1em; }
+html.touch #prompt:active { transform: translateX(-50%) scale(0.95); }
 .pop { position: fixed; z-index: 6; transform: translate(-50%, -100%); pointer-events: none; font: 700 22px var(--display); color: #fff; text-shadow: 0 2px 0 #c2255c, 0 4px 18px rgba(0, 0, 0, 0.6); animation: popUp 1.4s var(--ease) forwards; white-space: nowrap; }
 @keyframes popUp { 0% { opacity: 0; transform: translate(-50%, -60%) scale(0.6) rotate(-6deg); } 15% { opacity: 1; transform: translate(-50%, -110%) scale(1.15) rotate(3deg); } 100% { opacity: 0; transform: translate(-50%, -260%) scale(1); } }
 #bonks { color: #ff8fab; font-family: var(--mono); }
@@ -324,7 +338,7 @@ html.js dialog#cv:not([open]) { display: none; }
   #toasts { top: 172px; width: 90vw; }
   #card { right: 4vw; left: 4vw; width: auto; top: auto; bottom: 16px; transform: translateY(20px); max-height: 52vh; }
   #card.in { transform: none; }
-  #prompt { bottom: 200px; }
+  #prompt { bottom: calc(232px + env(safe-area-inset-bottom)); max-width: 86vw; }
   #speedo { right: auto; left: 50%; transform: translateX(-50%); bottom: 10px; }
   #speedo b { font-size: 38px; }
   #hint { display: none; }

@@ -328,6 +328,8 @@ $("#btn-skip").addEventListener("click", () => { if (mode === "intro") introT = 
 $("#btn-cv").addEventListener("click", () => { document.exitPointerLock?.(); if (!$("#cv").open) $("#cv").showModal(); });
 $("#cv-close").addEventListener("click", () => $("#cv").close());
 $("#btn-help").addEventListener("click", () => $("#help").classList.toggle("on"));
+$(".help-close").addEventListener("click", () => $("#help").classList.remove("on"));
+$("#help").addEventListener("click", (e) => { if (e.target.id === "help") e.currentTarget.classList.remove("on"); });
 $("#btn-map").addEventListener("click", () => toggleMap());
 $(".mv-close").addEventListener("click", () => closeMap());
 $("#btn-fly").addEventListener("click", () => { if (mode !== "play") return; closeMap(); document.exitPointerLock?.(); ui.travelMenu(TRAVEL.filter((o) => o.map !== W.id), travel); });
