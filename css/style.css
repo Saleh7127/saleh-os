@@ -135,8 +135,9 @@ html.js .stats > div.in { opacity: 1; transform: none; filter: none; }
 .stats dd { margin: 0; font: 700 18px var(--display); }
 .stats dd small { font: 600 10px var(--mono); color: var(--s-muted); margin-left: 2px; }
 .stats dd { font-variant-numeric: tabular-nums; line-height: 1.15; }
-.stats { gap: 22px; }
+.stats { gap: 22px; pointer-events: none; }
 @media (max-width: 1360px) { #start .keys { display: none; } }
+@media (min-width: 761px) and (max-height: 700px) { .stats { display: none; } }
 #st-uptime small, #st-seen small { font-size: 10px; margin-left: 3px; }
 .reel { display: inline-block; height: 1.15em; overflow: hidden; vertical-align: top; line-height: 1.15; }
 .reel-track { display: block; will-change: transform; }
