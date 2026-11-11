@@ -1,0 +1,169 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover, user-scalable=no" />
+  <title>Abu Saleh — Signal Lock</title>
+  <meta name="description" content="Abu Saleh's open-world portfolio: walk, run and drive through Kachua, Chandpur, Dhaka, Finland and L'Aquila — an interactive replay of a life." />
+  <meta name="theme-color" content="#05070f" />
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600&family=JetBrains+Mono:wght@400;600&family=Space+Grotesk:wght@500;700&display=swap" rel="stylesheet" />
+  <link rel="stylesheet" href="css/style.css" />
+  <script type="importmap">
+    { "imports": { "three": "https://cdn.jsdelivr.net/npm/three@0.170.0/build/three.module.js", "three/addons/": "https://cdn.jsdelivr.net/npm/three@0.170.0/examples/jsm/" } }
+  </script>
+</head>
+<body>
+  <a class="skip" href="#cv">Skip to CV</a>
+  <canvas id="scene" aria-label="Open-world game"></canvas>
+  <div id="vignette"></div>
+  <div id="veil"></div>
+
+  <section id="start" aria-label="Start">
+    <canvas id="hero-globe" aria-hidden="true"></canvas>
+    <div class="themes" role="group" aria-label="Colour theme" hidden><span>THEME</span></div>
+    <div class="start-inner">
+      <div class="boot" aria-hidden="true"></div>
+      <h1 class="reveal" aria-label="Abu Saleh">Abu Saleh</h1>
+      <ol class="route reveal" aria-label="Signal trace">
+        <li><b>Kachua</b><small>1999</small></li>
+        <li><b>Dhaka</b><small>2015</small></li>
+        <li><b>Turku</b><small>2024</small></li>
+        <li><b>L'Aquila</b><small>2025</small></li>
+        <li><b>Tampere</b><small>now</small></li>
+      </ol>
+      <p class="ask"><span class="pr">&gt;</span> <span class="q">explore this identity?</span></p>
+      <div class="start-row reveal">
+        <button id="btn-start" class="btn big"><kbd>Y</kbd><span>Start replay</span><i aria-hidden="true">→</i></button>
+        <button class="btn ghost cv-open" type="button"><kbd>N</kbd> Just the CV</button>
+        <label class="chk"><input type="checkbox" id="skip-intro" /> skip the descent</label>
+      </div>
+      <p class="loading reveal"><span class="spin"></span><span id="load-text">Loading…</span></p>
+    </div>
+    <dl class="stats">
+      <div><dt>Countries visited · <span id="st-count">10</span></dt><dd><span class="reel" aria-hidden="true"><span class="reel-track"></span></span></dd></div>
+      <div><dt>Uptime · since Aug 1999</dt><dd id="st-uptime">27</dd></div>
+      <div><dt>Time zones crossed</dt><dd>UTC+6 <small>→</small> +1</dd></div>
+      <div><dt>Last seen · Tampere</dt><dd id="st-seen">--:--</dd></div>
+    </dl>
+    <ul class="keys">
+      <li><kbd>W A S D</kbd> move</li><li><kbd>Shift</kbd> sprint</li><li><kbd>E</kbd> ride · open</li><li><kbd>F</kbd> bonk</li><li><kbd>M</kbd> map</li>
+    </ul>
+  </section>
+
+  <button id="btn-skip" class="pill">Skip intro ›</button>
+  <div id="caption" aria-live="polite"></div>
+  <div id="banner" aria-hidden="true"><span class="b-idx"></span><span class="b-place"></span><span class="b-meta"></span></div>
+
+  <aside id="hud" class="panel game" aria-label="GNSS receiver">
+    <div class="hud-top"><span class="tag">REPLAY</span><span id="fix" class="fix">3D FIX</span></div>
+    <dl>
+      <div><dt>LAT</dt><dd id="lat">—</dd></div>
+      <div><dt>LON</dt><dd id="lon">—</dd></div>
+      <div><dt>SATS</dt><dd id="sats">0</dd></div>
+    </dl>
+  </aside>
+  <div id="zone" class="game"><b id="zone-name">—</b><span id="zone-chapter"></span></div>
+
+  <div id="mini" class="game"><canvas id="minimap" width="170" height="170"></canvas></div>
+  <nav id="controls" class="game" aria-label="Menu">
+    <span id="trophies" class="pill" title="Achievements">◆ <b>0</b>/10</span>
+    <span id="bonks" class="pill" title="Friends bonked" hidden>Bonks <b>0</b></span>
+    <button id="btn-map" class="pill" title="Map & fast travel (M)">Map</button>
+    <button id="btn-fly" class="pill" title="Fly abroad" aria-label="Fly abroad">✈<span class="long"> Abroad</span></button>
+    <button id="btn-help" class="pill" title="Controls (H)">?</button>
+    <button id="btn-cv" class="btn">CV</button>
+  </nav>
+
+  <div id="labels" aria-hidden="true"></div>
+  <div id="prompt" class="game"><kbd>E</kbd><span></span></div>
+  <div id="speedo" class="game"><b id="kmh">0</b><small>km/h</small></div>
+  <aside id="card" class="panel" aria-live="polite"></aside>
+  <div id="toasts" aria-live="polite"></div>
+  <div id="hint" class="game">Click to look around · <kbd>W A S D</kbd> to move · find a <b>bike</b> or <b>CNG</b> and press <kbd>E</kbd> · <kbd>M</kbd> map to fast-travel · <b>✈ Abroad</b> for Finland &amp; Italy</div>
+
+  <div id="mapview"><div class="panel">
+    <div class="mv-map"><canvas id="bigmap" width="620" height="620"></canvas><p>Click any spot or place on the map to go there · gold = airports · <kbd>M</kbd> or <button class="mv-close pill" type="button">Close ✕</button></p></div>
+    <aside class="mv-list">
+      <div class="mv-tabs" role="tablist">
+        <button role="tab" class="on" data-tab="here" aria-selected="true"><span class="mv-country"></span></button>
+        <button role="tab" data-tab="abroad" aria-selected="false">Fly abroad ✈</button>
+      </div>
+      <div class="mv-scroll">
+        <div class="mv-here" role="tabpanel"></div>
+        <div class="mv-abroad" role="tabpanel" hidden></div>
+      </div>
+    </aside>
+  </div></div>
+
+  <div id="travel"><div class="panel"><p class="tag">DEPARTURES</p><h2>Where to?</h2><div class="opts"></div><button class="cancel pill">Stay here</button></div></div>
+  <div id="travelfx"><canvas id="fly-globe" aria-hidden="true"></canvas><div class="tfx-text"><small>NOW FLYING</small><p><b class="from"></b><i>✈</i><b class="to"></b></p></div></div>
+
+  <div id="help"><div class="panel">
+    <h2>Controls</h2>
+    <ul>
+      <li><kbd>W A S D</kbd> / joystick — move (camera-relative)</li>
+      <li><kbd>Mouse</kbd> / drag right side — look around · <kbd>Wheel</kbd> zoom</li>
+      <li><kbd>Shift</kbd> sprint · <kbd>C</kbd> walk · <kbd>Space</kbd> jump</li>
+      <li><kbd>E</kbd> ride a car / motorbike / CNG, get off, open a memory, board a flight</li>
+      <li><kbd>F</kbd> / <kbd>Click</kbd> bonk — your friends hang out in Mirpur, Dhanmondi and Kamalapur</li>
+      <li>In vehicles: <kbd>W</kbd> throttle · <kbd>S</kbd> brake/reverse · <kbd>A D</kbd> steer · <kbd>Space</kbd> handbrake drift</li>
+      <li><kbd>M</kbd> map — click any place to fast-travel there · <kbd>Esc</kbd> release mouse / close</li>
+      <li><b>✈ Abroad</b> button (or any airport) — fly to Finland and Italy</li>
+    </ul>
+    <p>Each district is a chapter of my life — walk into it and you'll grow to that age.</p>
+  </div></div>
+
+  <div id="touch" class="game" aria-hidden="true">
+    <div id="joy"><i></i></div>
+    <button class="tbtn" data-btn="act">E</button>
+    <button class="tbtn" data-btn="punch">✊</button>
+    <button class="tbtn" data-btn="jump">⤒</button>
+    <button class="tbtn" data-btn="run">»</button>
+  </div>
+
+  <dialog id="cv" open aria-labelledby="cv-title">
+    <button id="cv-close" class="pill" aria-label="Close CV"><span class="long">Close </span>✕</button>
+    <div class="cv-inner">
+      <header class="cv-head">
+        <div>
+          <h2 id="cv-title">Abu Saleh</h2>
+          <p>AI Engineer — Software Engineering &amp; Machine Learning · Tampere, Finland</p>
+        </div>
+      </header>
+      <p class="cv-links">
+        <a class="btn" href="assets/Abu_Saleh_CV.pdf" download="Abu_Saleh_CV.pdf">Download PDF</a>
+        <a class="btn ghost" href="mailto:abusalehjunior@gmail.com">Email</a>
+        <a class="btn ghost" href="https://github.com/Saleh7127" target="_blank" rel="noopener noreferrer">GitHub</a>
+        <a class="btn ghost" href="https://www.linkedin.com/in/abu-saleh-shaon" target="_blank" rel="noopener noreferrer">LinkedIn</a>
+      </p>
+      <h3>Experience</h3>
+      <ol class="cv-list">
+        <li><span>2026 – now</span><div><strong>u-blox</strong> — AI Engineer, Test Automation · Tampere</div></li>
+        <li><span>2026</span><div><strong>Montel</strong> — Data Scientist Intern · remote</div></li>
+        <li><span>2025</span><div><strong>Huawei Technologies</strong> — Audio Junior Researcher · Tampere</div></li>
+        <li><span>2024 – 2025</span><div><strong>Elisa</strong> — Research Intern, Time-Series · Turku</div></li>
+        <li><span>2023 – 2024</span><div><strong>Enosis Solutions</strong> — Software Engineer · Dhaka</div></li>
+        <li><span>2023</span><div><strong>AppsCode</strong> — Software Engineer · Dhaka</div></li>
+      </ol>
+      <h3>Education</h3>
+      <ol class="cv-list">
+        <li><span>2024 – 2026</span><div><strong>Erasmus Mundus Joint Master, EDISS</strong> — Åbo Akademi &amp; University of L'Aquila</div></li>
+        <li><span>2019 – 2023</span><div><strong>B.Sc. CSE</strong> — Daffodil International University · GPA 3.95/4.0</div></li>
+        <li><span>2015 – 2017</span><div><strong>Notre Dame College, Dhaka</strong> — HSC</div></li>
+        <li><span>2011 – 2015</span><div><strong>Al Amin Academy, Chandpur</strong> — SSC</div></li>
+      </ol>
+      <h3>Publications</h3>
+      <ul class="cv-plain">
+        <li><em>The Illusion of Agentic Complexity in README.md Generation</em> — ICSME 2026</li>
+        <li><em>Forecasting Finnish aFRR Energy Reserve Market Prices</em> — Energy &amp; AI</li>
+      </ul>
+    </div>
+  </dialog>
+
+  <script src="js/data.js"></script>
+  <script type="module" src="src/hero.js"></script>
+  <script type="module" src="src/main.js"></script>
+</body>
+</html>
